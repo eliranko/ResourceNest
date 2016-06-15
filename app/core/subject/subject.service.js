@@ -1,23 +1,33 @@
 'use strict';
 
-angular.module('core.subject').factory('Subject', ['$http', 'Logger',
-function($http, Logger) {
-  // Cached list
-  var promise;
-
-  return {
-    fetchSubjectList: function() {
-      if(angular.isDefined(promise)) {
-        return promise;
-      }
-
-      promise = $http.get('/subject-list').then(function (response) {
-        Logger.debug('Received the following subject list: ' + response.data);
-
-        return response.data;
-      });
-
-      return promise;
+angular.module('core.subject').factory('Subject', ['$resource', 'Logger',
+function($resource, Logger) {
+  var resource = $resource('/api/subjects/:subjectId', {}, {
+    _getSubjects: {
+      method: 'GET',
+      url: '/api/subjects',
+      isArray: true
     }
+  });
+
+  resource.getSubjects = function(succCallBack, errCallBack) {
+    Logger.debug('Trying to get subjects list');
+
+    if(!angular.isFunction(succCallBack)) {
+      Logger.error('resource.getSubjects received succCallBack which isn\'t a function');
+    }
+    if(!angular.isFunction(errCallBack)) {
+      Logger.error('resource.getSubjects received errCallBack which isn\'t a function');
+    }
+
+    return resource._getSubjects(function(data) {
+      Logger.debug('Retreived the subjects list successfully: ' + data);
+      succCallBack(data);
+    }, function(err) {
+      Logger.error('Unable to retreive the subjects list: ' + err);
+      errCallBack(err);
+    });
   };
+
+  return resource;
 }]);

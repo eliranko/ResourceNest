@@ -1,7 +1,7 @@
-'use strict';
+ 'use strict';
 
 describe('subject list component', function() {
-  var $rootScope, createController, deferredGetList, returnSubjectListValue;
+  var $rootScope, createController, getSubjectListSucc, getSubjectListErr;
 
   // Stubs
   var $scope, Subject, subjectListResponse;
@@ -10,40 +10,43 @@ describe('subject list component', function() {
 
   beforeEach(inject(function($injector) {
     // Get services
-    var $q = $injector.get('$q');
     $rootScope = $injector.get('$rootScope');
 
     // Create spy
     subjectListResponse = [{subject: 'CS'}, {subject: 'Physics'}];
     Subject = {
-      fetchSubjectList: jasmine.createSpy('fetchSubjectListSpy')
+      getSubjects: jasmine.createSpy('getSubjectsSpy')
     };
-    deferredGetList = $q.defer();
-    Subject.fetchSubjectList.and.callFake(function() {
-      return deferredGetList.promise;
+    var success;
+    Subject.getSubjects.and.callFake(function(succCallBack, errCallBack) {
+      if(success) {
+        succCallBack(subjectListResponse);
+      }
+      else {
+        errCallBack("Some error");
+      }
     });
-    returnSubjectListValue = function(value) {
-      // Set returned subject list value
-      deferredGetList.resolve(value);
-      // Propagate promise
-      $rootScope.$apply();
+    getSubjectListSucc = function() {
+      success = true;
     };
-
+    getSubjectListErr = function() {
+      success = false;
+    };
     $scope = $rootScope.$new();
     var $componentController = $injector.get('$componentController');
     createController = function() {
-      return $componentController('subjectListComponent', {$scope: $scope, Subject: Subject});
+      return $componentController('subjectList', {$scope: $scope, Subject: Subject});
     };
   }));
 
   it('should fetch subject list', function() {
     createController();
-    expect(Subject.fetchSubjectList).toHaveBeenCalled();
+    expect(Subject.getSubjects).toHaveBeenCalled();
   });
 
-  it('should set subjects to the fetced list', function() {
+  it('should set subjects to the fetced list on success', function() {
+    getSubjectListSucc();
     createController();
-    returnSubjectListValue(subjectListResponse);
     expect($scope.subjects).toEqual(subjectListResponse);
   });
 

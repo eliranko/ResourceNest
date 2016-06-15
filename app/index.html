@@ -1,12 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="resourceNestApp">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Resource Nest</title>
   <meta name="description" content="Resource nest application">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="app.css" />
+
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-resource/angular-resource.js"></script>
+  <script src="app.module.js"></script>
+  <script src="app.config.js"></script>
+  <script src="core/core.module.js"></script>
+  <script src="core/log/log.module.js"></script>
+  <script src="core/log/log.service.js"></script>
+  <script src="core/subject/subject.module.js"></script>
+  <script src="core/subject/subject.service.js"></script>
+  <script src="subject-list/subject-list.module.js"></script>
+  <script src="subject-list/subject-list.component.js"></script>
 </head>
+
 <body>
+
+  <subject-list></subject-list>
+
 </body>
 </html>

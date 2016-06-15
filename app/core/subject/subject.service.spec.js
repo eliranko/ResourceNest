@@ -4,7 +4,7 @@ describe('subject service', function() {
   var createController;
 
   // Stubs
-  var $httpBackend, subjectListRequestHandler, subjectListResponse;
+  var $httpBackend, subjectListResponse;
 
   // Tested
   var Subject;
@@ -14,7 +14,6 @@ describe('subject service', function() {
   beforeEach(inject(function($injector) {
     $httpBackend = $injector.get('$httpBackend');
     subjectListResponse = [{subject: 'CS'}, {subject: 'Physics'}];
-    subjectListRequestHandler = $httpBackend.when('GET', '/subject-list').respond(subjectListResponse);
 
     Subject = $injector.get('Subject');
   }));
@@ -24,13 +23,16 @@ describe('subject service', function() {
      $httpBackend.verifyNoOutstandingRequest();
    });
 
-   describe('subjects list request', function() {
-     it('should fetch subject list', function() {
-       $httpBackend.expectGET('/subject-list');
-       Subject.fetchSubjectList().then(function (data) {
-         expect(data).toEqual(subjectListResponse);
-       });
-       $httpBackend.flush();
+   it('should fetch the subjects list from /api/subjects', function() {
+     $httpBackend.expectGET('/api/subjects').respond(subjectListResponse);
+     var result;
+     Subject.getSubjects(function(data) {
+       result = data;
      });
+     $httpBackend.flush();
+
+     expect(result[0].subject).toEqual("CS");
+     expect(result[1].subject).toEqual("Physics");
    });
+
 });

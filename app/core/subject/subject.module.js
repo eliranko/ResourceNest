@@ -1,3 +1,3 @@
 'use strict';
 
-angular.module('core.subject', ['core.log']);
+angular.module('core.subject', ['ngResource', 'core.log']);
