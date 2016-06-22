@@ -3,14 +3,14 @@
 angular.module('core.log')
 .factory('Logger', ['$log',
 function($log) {
-  var undefinedMessage = function() {
+  var undefinedMessageHandler = function() {
     $log.warn('Received undefined message to log');
   };
 
   return {
     log: function(message) {
       if(!angular.isDefined(message)) {
-        undefinedMessage();
+        undefinedMessageHandler();
         return;
       }
 
@@ -18,7 +18,7 @@ function($log) {
     },
     debug: function(message) {
       if(!angular.isDefined(message)) {
-        undefinedMessage();
+        undefinedMessageHandler();
         return;
       }
 
@@ -26,7 +26,7 @@ function($log) {
     },
     info: function(message) {
       if(!angular.isDefined(message)) {
-        undefinedMessage();
+        undefinedMessageHandler();
         return;
       }
 
@@ -34,7 +34,7 @@ function($log) {
     },
     warn: function(message) {
       if(!angular.isDefined(message)) {
-        undefinedMessage();
+        undefinedMessageHandler();
         return;
       }
 
@@ -42,7 +42,7 @@ function($log) {
     },
     error: function(message) {
       if(!angular.isDefined(message)) {
-        undefinedMessage();
+        undefinedMessageHandler();
         return;
       }
 

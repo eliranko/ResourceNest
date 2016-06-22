@@ -1,12 +1,12 @@
  'use strict';
 
-describe('subject list component', function() {
-  var $rootScope, createController, getSubjectListSucc, getSubjectListErr;
+describe('navbar component', function() {
+  var $rootScope, createController, setGetSubjectListSucc, setGetSubjectListErr;
 
   // Stubs
   var $scope, Subject, subjectListResponse;
 
-  beforeEach(module('subjectList'));
+  beforeEach(module('navbar'));
 
   beforeEach(inject(function($injector) {
     // Get services
@@ -19,23 +19,18 @@ describe('subject list component', function() {
     };
     var success;
     Subject.getSubjects.and.callFake(function(succCallBack, errCallBack) {
-      if(success) {
-        succCallBack(subjectListResponse);
-      }
-      else {
-        errCallBack("Some error");
-      }
+      return success ? succCallBack(subjectListResponse) : errCallBack("Some error");
     });
-    getSubjectListSucc = function() {
+    setGetSubjectListSucc = function() {
       success = true;
     };
-    getSubjectListErr = function() {
+    setGetSubjectListErr = function() {
       success = false;
     };
     $scope = $rootScope.$new();
     var $componentController = $injector.get('$componentController');
     createController = function() {
-      return $componentController('subjectList', {$scope: $scope, Subject: Subject});
+      return $componentController('navbar', {$scope: $scope, Subject: Subject});
     };
   }));
 
@@ -45,7 +40,7 @@ describe('subject list component', function() {
   });
 
   it('should set subjects to the fetced list on success', function() {
-    getSubjectListSucc();
+    setGetSubjectListSucc();
     createController();
     expect($scope.subjects).toEqual(subjectListResponse);
   });

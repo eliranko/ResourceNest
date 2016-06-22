@@ -1,11 +1,11 @@
 'use strict';
 
 angular.
-  module('subjectList').
-  component('subjectList', {
-    templateUrl: 'subject-list/subject-list.template.html',
+  module('navbar').
+  component('navbar', {
+    templateUrl: 'navbar/navbar.template.html',
     controller: ['$scope', '$timeout', 'Logger',  'Subject',
-      function SubjectListController($scope, $timeout, Logger,  Subject) {
+      function NavbarController($scope, $timeout, Logger,  Subject) {
         var fetchSubjectsFailureCounter = 0;
         var getSubjects = function() {
           var stopFetchInterval;
@@ -24,7 +24,7 @@ angular.
           });
         };
 
-        $scope.subjects = ['a', 'b'];
+        $scope.subjects = ['a', 'b', 'aa', 'aaa', 'aaaa', 'aax', 'aav', 'aaas', 'aavvvvvvv', 'aaxqqq', 'aaxxccc', 'aabbbbb', 'aaqwewerrr', 'aaccccccccccccccccc'];
         getSubjects();
       }
     ]

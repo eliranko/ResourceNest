@@ -6,9 +6,9 @@
   <meta name="description" content="Resource nest application">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="stylesheet" href="app.css" />
-
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
   <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-resource/angular-resource.js"></script>
   <script src="app.module.js"></script>
@@ -18,13 +18,14 @@
   <script src="core/log/log.service.js"></script>
   <script src="core/subject/subject.module.js"></script>
   <script src="core/subject/subject.service.js"></script>
-  <script src="subject-list/subject-list.module.js"></script>
-  <script src="subject-list/subject-list.component.js"></script>
+  <script src="navbar/navbar.module.js"></script>
+  <script src="navbar/navbar.component.js"></script>
 </head>
 
 <body>
 
-  <subject-list></subject-list>
+  <navbar></navbar>
+  <sidebar></sidebar>
 
 </body>
 </html>
