@@ -24,7 +24,7 @@ describe('sidebar component', function() {
           break;
         case 'url':
         succCallBack({
-          type: 'url',
+          type: 'mainview',
           data: 'SomeUrl'
           });
           break;
@@ -76,7 +76,7 @@ describe('sidebar component', function() {
     createController();
     spyOn($rootScope, '$broadcast').and.callThrough();
     setLocation('#/a/b');
-    expect($rootScope.$broadcast).toHaveBeenCalledWith('urlChanged', 'SomeUrl');
+    expect($rootScope.$broadcast).toHaveBeenCalledWith('mainviewChanged', 'SomeUrl');
   });
 
   it('should set subject info to empty when fetching error occurs', function() {

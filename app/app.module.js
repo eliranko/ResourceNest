@@ -3,5 +3,6 @@
 angular.module('resourceNestApp', [
   'core',
   'navbar',
-  'sidebar'
+  'sidebar',
+  'mainview'
 ]);

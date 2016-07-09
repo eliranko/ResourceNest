@@ -7,7 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+  <link rel="stylesheet" href="app.css" />
   <link rel="stylesheet" href="sidebar/sidebar.template.css" />
+  <link rel="stylesheet" href="mainview/mainview.template.css" />
 
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
@@ -24,12 +26,30 @@
   <script src="navbar/navbar.component.js"></script>
   <script src="sidebar/sidebar.module.js"></script>
   <script src="sidebar/sidebar.component.js"></script>
+  <script src="mainview/mainview.module.js"></script>
+  <script src="mainview/mainview.component.js"></script>
+
 </head>
 
 <body>
 
-  <navbar></navbar>
-  <sidebar></sidebar>
+  <div class="container-fluid">
+
+    <div class="row">
+      <navbar></navbar>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-3 col-md-2 sidebar">
+        <sidebar></sidebar>
+      </div>
+
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 mainview-frame">
+        <mainview></mainview>
+      </div>
+    </div>
+
+  </div>
 
 </body>
 </html>

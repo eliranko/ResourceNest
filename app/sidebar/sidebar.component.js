@@ -29,8 +29,8 @@ angular.
                 case 'header':
                   $scope.subjectInfo = data.data;
                   break;
-                case 'url':
-                  $rootScope.$broadcast('urlChanged', data.data);
+                case 'mainview':
+                  $rootScope.$broadcast('mainviewChanged', data.data);
                   break;
                 default:
                   Logger.error('Received unsupported data type: ' + data.type);
