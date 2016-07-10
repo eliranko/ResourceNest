@@ -1,2 +1,14 @@
-<iframe src="http://www.tinywebgallery.com/blog/advanced-iframe/free-iframe-checker" width="100%" height="100%">
-</iframe>
+<div ng-show="xFrameOptionsFree">
+  <iframe id="frame" ng-src="{{url}}" width="100%" height="100%" onload="iframeOnLoad()">
+  </iframe>
+</div>
+
+<div ng-show="!xFrameOptionsFree">
+  <p>
+    This site cannot be shown inside ResourceNest.<br />
+  </p>
+
+  <button ng-click="openTab()">
+    Open site
+  </button>
+</div>
