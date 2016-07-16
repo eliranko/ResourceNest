@@ -18,7 +18,7 @@ describe('mainview component' , function() {
   it('changes url on mainviewChanged event', function() {
     createController();
     $rootScope.$broadcast('mainviewChanged', {type: 'url', data: 'www.google.com'});
-    expect($scope.url).toBe('www.google.com');
+    expect($scope.url + '').toBe('www.google.com');
   });
 
 });
