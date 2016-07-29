@@ -75,6 +75,14 @@
   background-color: #ABC;
 }
 
+.sidebar-toolbar-unclicked {
+  background-color: inherit;
+}
+
+.sidebar-toolbar-clicked {
+  background-color: #ABC;
+}
+
 .sidebar-toolbar-image-add {
   background-image: url('icons/add25x25.png');
   background-repeat: no-repeat;

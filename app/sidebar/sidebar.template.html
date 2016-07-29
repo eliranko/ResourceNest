@@ -24,10 +24,10 @@
 <div class="sidebar-toolbar">
   <ul>
     <li>
-      <a href="#" class="sidebar-toolbar-image-add"></a>
+      <a href="#" ng-click="toolbarItemClick('add')" class="sidebar-toolbar-image-add" ng-class="toolbarItemsClassObject.addItemClass"></a>
     </li>
     <li>
-      <a href="#" class="sidebar-toolbar-image-remove"></a>
+      <a href="#" ng-click="toolbarItemClick('remove')" class="sidebar-toolbar-image-remove" ng-class="toolbarItemsClassObject.removeItemClass"></a>
     </li>
   </ul>
 </div>
