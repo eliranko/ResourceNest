@@ -11,6 +11,9 @@ function($resource, Logger) {
     _getSubjectInfo: {
       method: 'GET',
       isArray: true
+    },
+    _postSubjectInfo: {
+      method: 'POST'
     }
   });
 
@@ -33,8 +36,8 @@ function($resource, Logger) {
     });
   };
 
-  resource.getSubjectInfo = function(concat, succCallBack, errCallBack) {
-    Logger.debug('Trying to get subject info of: ' + concat);
+  resource.getSubjectInfo = function(url, succCallBack, errCallBack) {
+    Logger.debug('Trying to get subject info of: ' + url);
 
     if(!angular.isFunction(succCallBack)) {
       Logger.error('resource.getSubjectInfo received succCallBack which isn\'t a function');
@@ -43,11 +46,30 @@ function($resource, Logger) {
       Logger.error('resource.getSubjectInfo received errCallBack which isn\'t a function');
     }
 
-    return resource._getSubjectInfo({subject: concat}, function(data) {
-      Logger.debug('Retreived the subject info of: ' + concat + ' successfully: ' + data);
+    return resource._getSubjectInfo({subject: url}, function(data) {
+      Logger.debug('Retreived the subject info of: ' + url + ' successfully: ' + data);
       succCallBack(data);
     }, function(err) {
-      Logger.error('Unable to retreive the subject info of: ' + concat + ' with error: ' + err);
+      Logger.error('Unable to retreive the subject info of: ' + url + ' with error: ' + err);
+      errCallBack(err);
+    });
+  };
+
+  resource.postSubjectInfo = function(url, data, succCallBack, errCallBack) {
+    Logger.debug('Trying to post subject info to url: ' + url + ' with data: ' + data);
+
+    if(!angular.isFunction(succCallBack)) {
+      Logger.error('resource.postSubjectInfo received succCallBack which isn\'t a function');
+    }
+    if(!angular.isFunction(errCallBack)) {
+      Logger.error('resource.postSubjectInfo received errCallBack which isn\'t a function');
+    }
+
+    return resource._postSubjectInfo({subject: url, params: data}, function(data) {
+      Logger.debug('Posted the subject info of: ' + url + ' successfully: ' + data);
+      succCallBack(data);
+    }, function(err) {
+      Logger.error('Unable to post the subject info of: ' + url + ' with error: ' + err);
       errCallBack(err);
     });
   };

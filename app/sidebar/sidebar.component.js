@@ -56,6 +56,10 @@ angular.
           switch (toolbarButton) {
             case 'add':
               $scope.toolbarItemsClassObject.addItemClass = setNewToolbarItemClass(toolbarItemOldValue);
+              BootstrapDialog.show({
+                title: 'Add subject info',
+                message: $('<div></div>').load('sidebar/sidebar.template.add.popup.html')
+              });
               break;
             case 'remove':
               $scope.toolbarItemsClassObject.removeItemClass = setNewToolbarItemClass(toolbarItemOldValue);
