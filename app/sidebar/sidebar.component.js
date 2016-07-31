@@ -6,23 +6,23 @@ angular.
     templateUrl: 'sidebar/sidebar.template.html',
     controller: ['$rootScope', '$scope', '$location', 'Logger', 'Subject', 'Helper',
       function SidebarController($rootScope, $scope, $location, Logger, Subject, Helper){
-        var currentPath = '';
+        $scope.currentPath = '';
         var toolbarItemUnclickedClass = 'sidebar-toolbar-unclicked';
         var toolbarItemClickedClass = 'sidebar-toolbar-clicked';
         $scope.toolbarItemsClassObject = {
-          addItemClass: toolbarItemUnclickedClass,
           removeItemClass: toolbarItemUnclickedClass
         };
         $scope.subjectInfo = {};
+        $scope.addType = 'term';
 
         $scope.$on('$locationChangeStart', function (event) {
-          currentPath = Helper.parsePath($location.path());
+          $scope.currentPath = Helper.parsePath($location.path());
 
-          if(currentPath === '') {
+          if($scope.currentPath === '') {
             $scope.subjectInfo = {};
           }
           else {
-            Subject.getSubjectInfo(currentPath, function(data) {
+            Subject.getSubjectInfo($scope.currentPath, function(data) {
               switch (data.type) {
                 case 'header':
                   $scope.subjectInfo = data.data;
@@ -39,33 +39,36 @@ angular.
           }
         });
 
-        var setNewToolbarItemClass = function (oldValue) {
+        var setNewToolbarItemClass = function(oldValue) {
           return oldValue === toolbarItemUnclickedClass ? toolbarItemClickedClass : toolbarItemUnclickedClass;
         };
 
-        var setDefaultToolbarItemsClass = function () {
-          $scope.toolbarItemsClassObject.addItemClass = toolbarItemUnclickedClass;
+        var setDefaultToolbarItemsClass = function() {
           $scope.toolbarItemsClassObject.removeItemClass = toolbarItemUnclickedClass;
         };
 
-        $scope.toolbarItemClick = function (toolbarButton) {
-          var toolbarItemOldValue = toolbarButton === 'add' ? $scope.toolbarItemsClassObject.addItemClass : $scope.toolbarItemsClassObject.removeItemClass;
+        $scope.toolbarItemClick = function(toolbarButton) {
+          var toolbarItemOldValue;
+          switch (toolbarButton) {
+            case 'remove':
+              toolbarItemOldValue = $scope.toolbarItemsClassObject.removeItemClass;
+              break;
+            default:
+
+          }
 
           setDefaultToolbarItemsClass();
 
           switch (toolbarButton) {
-            case 'add':
-              $scope.toolbarItemsClassObject.addItemClass = setNewToolbarItemClass(toolbarItemOldValue);
-              BootstrapDialog.show({
-                title: 'Add subject info',
-                message: $('<div></div>').load('sidebar/sidebar.template.add.popup.html')
-              });
-              break;
             case 'remove':
               $scope.toolbarItemsClassObject.removeItemClass = setNewToolbarItemClass(toolbarItemOldValue);
               break;
             default:
           }
+        };
+
+        $scope.addPopupClick = function(type) {
+          $scope.addType = type;
         };
       }
     ]

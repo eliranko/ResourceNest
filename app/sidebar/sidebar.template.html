@@ -1,4 +1,4 @@
-<!--Subject info-->
+<!--Subject infos-->
 <div class="col-sm-3 col-md-2 sidebar">
   <ul class="nav nav-sidebar">
     <li><a href="#/term"><span class="sidebar-image sidebar-image-term">Term</span></a></li>
@@ -29,10 +29,79 @@
 <div class="sidebar-toolbar">
   <ul>
     <li>
-      <a href="#" ng-click="toolbarItemClick('add')" class="sidebar-toolbar-image-add" ng-class="toolbarItemsClassObject.addItemClass"></a>
+      <a ng-href="{{'#' + currentPath}}" ng-click="toolbarItemClick('add')" class="sidebar-toolbar-image-add" data-toggle="modal" data-target="#addModal"></a>
     </li>
     <li>
       <a href="#" ng-click="toolbarItemClick('remove')" class="sidebar-toolbar-image-remove" ng-class="toolbarItemsClassObject.removeItemClass"></a>
     </li>
   </ul>
 </div>
+
+<!--Add subject info popup-->
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" id="addModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="btn btn-secondary" ng-click="addPopupClick('term')">Term</button>
+        <button type="button" class="btn btn-secondary" ng-click="addPopupClick('subject')">Subject</button>
+        <button type="button" class="btn btn-secondary" ng-click="addPopupClick('header')">Header</button>
+      </div>
+      <div class="modal-body">
+        <div ng-show="addType == 'term'">
+          <div class="contianer">
+            <form>
+              <div class="form-group row">
+                <label for="termName" class="col-sm-2 col-form-label col-form-label-sm">Name</label>
+                <div class="col-sm-10">
+                  <input class="form-control form-control-sm" id="termName" placeholder="Name" />
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="termTextArea" class="col-sm-2 col-form-label col-form-label-sm">Content</label>
+                <div class="col-sm-10">
+                  <textarea class="form-control form-control-sm" id="termTextArea" rows="3" placeholder="Content"></textarea>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div ng-show="addType == 'subject'">
+          <div class="contianer">
+            <form>
+              <div class="form-group row">
+                <label for="subjectName" class="col-sm-2 col-form-label col-form-label-sm">Name</label>
+                <div class="col-sm-10">
+                  <input class="form-control form-control-sm" id="subjectName" placeholder="Name" />
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="subjectUrl" class="col-sm-2 col-form-label col-form-label-sm">Url</label>
+                <div class="col-sm-10">
+                  <input class="form-control" type="url" placeholder="http://resourcenest.com" id="subjectUrl">
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div ng-show="addType == 'header'">
+          <div class="contianer">
+            <form>
+              <div class="form-group row">
+                <label for="HeaderName" class="col-sm-2 col-form-label col-form-label-sm">Name</label>
+                <div class="col-sm-10">
+                  <input class="form-control form-control-sm" id="headerName" placeholder="Name" />
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-default" data-dismiss="modal">
+          Add
+        </button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
