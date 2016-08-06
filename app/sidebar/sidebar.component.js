@@ -11,6 +11,8 @@ angular.
         $scope.addType = 'term';
         $scope.removePopupSubjectInfoList = [];
         $scope.toBeRemoved = [];
+        $scope.removeButtonDisabled = false;
+        $scope.addTermNameTaken = false;
 
         var setSubjectInfo = function(data) {
           if(data == null) {
@@ -65,8 +67,24 @@ angular.
           }
         });
 
+        // Add subject info
         $scope.addPopupClick = function(type) {
           $scope.addType = type;
+        };
+
+        $scope.addPopupAddClick = function(type, info) {
+          info.type = type;
+
+          // Check validity
+          var contains = false;
+          $scope.subjectInfo.forEach(function(item) {
+            if(item.name === info.name) {
+              contains = true;
+            }
+          });
+          if(contains) {
+            $scope.addTermNameTaken = true;
+          }
         };
 
         // Drag & Drop
@@ -105,6 +123,7 @@ angular.
        };
 
        $scope.removePopupRemoveClicked = function() {
+         $scope.removeButtonDisabled = true;
          var finishedDeletionCount = 0;
          var deletedList = [];
          $scope.toBeRemoved.forEach(function(name) {
@@ -138,5 +157,7 @@ angular.
            return list.indexOf(info.name) !== -1;
          });
          angular.copy($scope.subjectInfo, $scope.removePopupSubjectInfoList);
+
+         $scope.removeButtonDisabled = false;
        };
 }]});

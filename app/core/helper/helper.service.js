@@ -12,6 +12,10 @@ angular.module('core.helper')
     },
 
     removeIf: function(arr, value, callback) {
+      if(!angular.isArray(arr)) {
+        return;
+      }
+
       var i = 0;
       while (i < arr.length) {
           if (callback(arr[i], value)) {
