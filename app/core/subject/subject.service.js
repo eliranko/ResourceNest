@@ -14,6 +14,9 @@ function($resource, Logger) {
     },
     _postSubjectInfo: {
       method: 'POST'
+    },
+    _deleteSubjectInfo: {
+      method: 'DELETE'
     }
   });
 
@@ -71,6 +74,25 @@ function($resource, Logger) {
     }, function(err) {
       Logger.error('Unable to post the subject info of: ' + url + ' with error: ' + err);
       errCallBack(err);
+    });
+  };
+
+  resource.deleteSubjectInfo = function(url, succCallBack, errCallBack) {
+    Logger.debug('Trying to delete subject info of url: ' + url);
+
+    if(!angular.isFunction(succCallBack)) {
+      Logger.error('resource.deleteSubjectInfo received succCallBack which isn\'t a function');
+    }
+    if(!angular.isFunction(errCallBack)) {
+      Logger.error('resource.deleteSubjectInfo received errCallBack which isn\'t a function');
+    }
+
+    return resource._deleteSubjectInfo({subject: url}, function() {
+      Logger.debug('Posted the subject info of: ' + url + ' successfully');
+      succCallBack();
+    }, function() {
+      Logger.error('Unable to post the subject info of: ' + url);
+      errCallBack();
     });
   };
 

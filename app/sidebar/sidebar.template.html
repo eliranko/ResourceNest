@@ -1,27 +1,36 @@
 <!--Subject infos-->
 <div class="col-sm-3 col-md-2 sidebar">
+  <!--Terms-->
   <ul class="nav nav-sidebar">
-    <li><a href="#/term"><span class="sidebar-image sidebar-image-term">Term</span></a></li>
-    <li><a href="#/term"><span class="sidebar-image sidebar-image-term">Term</span></a></li>
-    <li><a href="#/term"><span class="sidebar-image sidebar-image-term">Term</span></a></li>
-    <li><a href="#/term"><span class="sidebar-image sidebar-image-term">Term</span></a></li>
+    <li ng-repeat="info in subjectInfo | filter : {type: 'term'}">
+      <a ng-href="{{info.href}}">
+        <span class="sidebar-image sidebar-image-term">
+          {{info.name}}
+        </span>
+      </a>
+    </li>
   </ul>
 
+  <!--Subjects-->
   <ul class="nav nav-sidebar">
-    <li><a href="#/subject"><span class="sidebar-image sidebar-image-subject">Subject</span></a></li>
-    <li><a href="#/subject"><span class="sidebar-image sidebar-image-subject">Subject</span></a></li>
-    <li><a href="#/subject"><span class="sidebar-image sidebar-image-subject">Subject</span></a></li>
-    <li><a href="#/subject"><span class="sidebar-image sidebar-image-subject">Subject</span></a></li>
-    <li><a href="#/subject"><span class="sidebar-image sidebar-image-subject">Subject</span></a></li>
+    <li ng-repeat="info in subjectInfo | filter : {type: 'subject'}">
+      <a ng-href="{{info.href}}">
+        <span class="sidebar-image sidebar-image-subject">
+          {{info.name}}
+        </span>
+      </a>
+    </li>
   </ul>
 
+  <!--Headers-->
   <ul class="nav nav-sidebar">
-    <li><a href="#/header"><span class="sidebar-image sidebar-image-header">Header</span></a></li>
-    <li><a href="#/header"><span class="sidebar-image sidebar-image-header">Header</span></a></li>
-    <li><a href="#/header"><span class="sidebar-image sidebar-image-header">Header</span></a></li>
-    <li><a href="#/header"><span class="sidebar-image sidebar-image-header">Header</span></a></li>
-    <li><a href="#/header"><span class="sidebar-image sidebar-image-header">Header</span></a></li>
-    <li><a href="#/header"><span class="sidebar-image sidebar-image-header">Header</span></a></li>
+    <li ng-repeat="info in subjectInfo | filter : {type: 'header'}">
+      <a ng-href="{{info.href}}">
+        <span class="sidebar-image sidebar-image-header">
+          {{info.name}}
+        </span>
+      </a>
+    </li>
   </ul>
 </div>
 
@@ -29,16 +38,57 @@
 <div class="sidebar-toolbar">
   <ul>
     <li>
-      <a ng-href="{{'#' + currentPath}}" ng-click="toolbarItemClick('add')" class="sidebar-toolbar-image-add" data-toggle="modal" data-target="#addModal"></a>
+      <a ng-href="{{'#/' + currentPath}}" ng-click="toolbarItemClick('add')" class="sidebar-toolbar-image-add" data-toggle="modal" data-target="#addSubjectInfoModal"></a>
     </li>
     <li>
-      <a href="#" ng-click="toolbarItemClick('remove')" class="sidebar-toolbar-image-remove" ng-class="toolbarItemsClassObject.removeItemClass"></a>
+      <a ng-href="{{'#/' + currentPath}}" ng-click="toolbarItemClick('remove')" class="sidebar-toolbar-image-remove" data-toggle="modal" data-target="#removeSubjectInfoModal"></a>
     </li>
   </ul>
 </div>
 
+<!--Remove subject info popup-->
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="removeSubjectInfoModalLabel" id="removeSubjectInfoModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="contianer">
+          <div class="row">
+            <div class="col-sm-4">
+              <ul class="nav nav-sidebar nav-sidebar-remove-popup">
+                <li ng-repeat="info in removePopupSubjectInfoList">
+                  <a draggable="true" ondragstart="removePopupDragStarted(event)" ondragend="removePopupDragEnd(event)">
+                    <span class="sidebar-image" ng-class="{'sidebar-image-term': info.type === 'term', 'sidebar-image-subject': info.type === 'subject', 'sidebar-image-header': info.type === 'header'}">
+                      {{info.name}}
+                    </span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="col-sm-8 nav-sidebar-remove-popup-dropzone" ondrop="removePopupOnDrop(event)" ondragover="removePopupOnDragOver(event)">
+              <ul>
+                <li ng-repeat="name in toBeRemoved">
+                  {{name}}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" ng-click="removePopupClearClicked()">
+          Clear
+        </button>
+        <button type="button" class="btn btn-primary btn-default" data-dismiss="modal" ng-click="removePopupRemoveClicked()">
+          Remove
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!--Add subject info popup-->
-<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" id="addModal">
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addSubjectInfoModalLabel" id="addSubjectInfoModal">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -102,6 +152,6 @@
           Add
         </button>
       </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+    </div>
+  </div>
+</div>
