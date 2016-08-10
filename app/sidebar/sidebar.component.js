@@ -12,7 +12,7 @@ angular.
         $scope.removePopupSubjectInfoList = [];
         $scope.toBeRemoved = [];
         $scope.removeButtonDisabled = false;
-        $scope.addTermNameTaken = false;
+        $scope.addInfoNameTaken = false;
 
         var setSubjectInfo = function(data) {
           if(data == null) {
@@ -67,27 +67,62 @@ angular.
           }
         });
 
-        // Add subject info
-        $scope.addPopupClick = function(type) {
-          $scope.addType = type;
+        /**********************************************************************
+         ***************************Add Subject Info***************************
+         *********************************************************************/
+        $scope.addPopupClearClick = function() {
+          $scope.addInfoNameTaken = false;
+          if(angular.isDefined($scope.info)) {
+            $scope.info.name = "";
+            $scope.info.content = "";
+            $scope.info.url = "";
+          }
+
+          $scope.$broadcast('show-form-errors-reset');
         };
 
-        $scope.addPopupAddClick = function(type, info) {
-          info.type = type;
+        $scope.addPopupHeaderClick = function(type) {
+          $scope.addType = type;
+          $scope.addPopupClearClick();
+        };
 
-          // Check validity
-          var contains = false;
-          $scope.subjectInfo.forEach(function(item) {
-            if(item.name === info.name) {
-              contains = true;
+        $scope.addPopupAddClick = function() {
+          var invalid = true;
+          if(angular.isDefined($scope.info)) {
+            $scope.info.type = $scope.addType;
+
+            // Check if the name is taken
+            $scope.addInfoNameTaken = false;
+            if(angular.isDefined($scope.info.name)) {
+              $scope.subjectInfo.forEach(function(subjectInfo) {
+                if($scope.info.name.toLowerCase() === subjectInfo.name.toLowerCase()) {
+                  $scope.addInfoNameTaken = true;
+                }
+              });
+            }
+
+            // Check if all the fields were filled correctly
+            invalid = ($scope.addType === 'term' && $scope.addTermForm.$invalid) ||
+              ($scope.addType === 'subject' && $scope.addSubjectForm.$invalid) ||
+              ($scope.addType === 'header' && $scope.addHeaderForm.$invalid);
+          }
+
+          // Cue the directive to show error if needed
+          $scope.$broadcast('show-form-errors');
+
+          // Do not close modal if form is invalid
+          $('#addSubjectInfoModal').one('hide.bs.modal', function(e) {
+            if(!angular.isDefined($scope.info) || invalid || $scope.addInfoNameTaken) {
+              e.preventDefault();
+              e.stopImmediatePropagation();
+              return false;
             }
           });
-          if(contains) {
-            $scope.addTermNameTaken = true;
-          }
         };
 
-        // Drag & Drop
+        /**********************************************************************
+         **************************Remove Subject Info*************************
+         *********************************************************************/
         $window.removePopupDragStarted = function(e) {
           e.target.style.opacity = '0.4';
 

@@ -3,29 +3,29 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <button type="button" class="btn btn-secondary" ng-click="addPopupClick('term')">Term</button>
-        <button type="button" class="btn btn-secondary" ng-click="addPopupClick('subject')">Subject</button>
-        <button type="button" class="btn btn-secondary" ng-click="addPopupClick('header')">Header</button>
+        <button type="button" class="btn btn-secondary" ng-click="addPopupHeaderClick('term')">Term</button>
+        <button type="button" class="btn btn-secondary" ng-click="addPopupHeaderClick('subject')">Subject</button>
+        <button type="button" class="btn btn-secondary" ng-click="addPopupHeaderClick('header')">Header</button>
       </div>
       <div class="modal-body">
-        <div ng-show="addType == 'term'">
+        <div ng-show="addType === 'term'">
           <div class="contianer">
             <form name="addTermForm">
-              <div class="form-group row" ng-class="{ 'has-error': addTermForm.name.$invalid && addTermForm.name.$dirty }">
+              <div class="form-group row" sidebar-toolbar-validation>
                 <label for="termName" class="col-sm-2 col-form-label col-form-label-sm">
                   Name
                 </label>
                 <div class="col-sm-10">
                   <input class="form-control form-control-sm" id="termName" placeholder="Name" name="name" ng-model="info.name" required />
-                  <p class="help-block" ng-if="addTermNameTaken">
-                    The term's name is taken
-                  </p>
+                  <show-error-message content="'Name is taken'" ng-show="showFormError['name'] && addInfoNameTaken"></show-error-message>
+                  <show-error-message content="'Please fill the field'" ng-show="showFormError['name'] && !addInfoNameTaken && addTermForm.name.$invalid"></show-error-message>
                 </div>
               </div>
-              <div class="form-group row" ng-class="{ 'has-error': addTermForm.content.$invalid && addTermForm.content.$dirty }">
+              <div class="form-group row">
                 <label for="termTextArea" class="col-sm-2 col-form-label col-form-label-sm">Content</label>
-                <div class="col-sm-10">
+                <div class="col-sm-10" sidebar-toolbar-validation>
                   <textarea class="form-control form-control-sm" id="termTextArea" rows="3" placeholder="Content" name="content" ng-model="info.content" required></textarea>
+                  <show-error-message content="'Please fill the field'" ng-show="showFormError['content'] && addTermForm.content.$invalid"></show-error-message>
                 </div>
               </div>
             </form>
@@ -34,16 +34,19 @@
         <div ng-show="addType == 'subject'">
           <div class="contianer">
             <form name="addSubjectForm">
-              <div class="form-group row">
+              <div class="form-group row" sidebar-toolbar-validation>
                 <label for="subjectName" class="col-sm-2 col-form-label col-form-label-sm">Name</label>
                 <div class="col-sm-10">
-                  <input class="form-control form-control-sm" id="subjectName" placeholder="Name" ng-model="info.name" required />
+                  <input class="form-control form-control-sm" id="subjectName" name="name" placeholder="Name" ng-model="info.name" required />
+                  <show-error-message content="'Name is taken'" ng-show="showFormError['name'] && addInfoNameTaken"></show-error-message>
+                  <show-error-message content="'Please fill the field'" ng-show="showFormError['name'] && !addInfoNameTaken && addTermForm.name.$invalid"></show-error-message>
                 </div>
               </div>
-              <div class="form-group row">
+              <div class="form-group row" sidebar-toolbar-validation>
                 <label for="subjectUrl" class="col-sm-2 col-form-label col-form-label-sm">Url</label>
                 <div class="col-sm-10">
                   <input class="form-control" type="url" placeholder="http://resourcenest.com" id="subjectUrl" ng-model="info.url" pattern="https?://.+" required>
+                  <show-error-message content="'Please fill the field correctly'" ng-show="showFormError['content'] && addTermForm.content.$invalid"></show-error-message>
                 </div>
               </div>
             </form>
@@ -52,10 +55,12 @@
         <div ng-show="addType == 'header'">
           <div class="contianer">
             <form name="addHeaderForm">
-              <div class="form-group row">
+              <div class="form-group row" sidebar-toolbar-validation>
                 <label for="HeaderName" class="col-sm-2 col-form-label col-form-label-sm">Name</label>
                 <div class="col-sm-10">
-                  <input class="form-control form-control-sm" id="headerName" placeholder="Name" ng-model="info.name" required />
+                  <input class="form-control form-control-sm" id="headerName" name="name" placeholder="Name" ng-model="info.name" required />
+                  <show-error-message content="'Name is taken'" ng-show="showFormError['name'] && addInfoNameTaken"></show-error-message>
+                  <show-error-message content="'Please fill the field'" ng-show="showFormError['name'] && !addInfoNameTaken && addTermForm.name.$invalid"></show-error-message>
                 </div>
               </div>
             </form>
@@ -63,7 +68,10 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary btn-default" data-dismiss="modal" ng-click="addPopupAddClick(addType, info)" ng-disabled="addType === 'term' && addTermForm.$invalid || addType === 'subject' && addSubjectForm.$invalid || addType === 'header' && addHeaderForm.$invalid">
+        <button type="button" class="btn" ng-click="addPopupClearClick()">
+          Clear
+        </button>
+        <button type="button" class="btn btn-primary btn-default" data-dismiss="modal" ng-click="addPopupAddClick()">
           Add
         </button>
       </div>
