@@ -104,20 +104,33 @@ angular.
             // Check if all the fields were filled correctly
             invalid = ($scope.addType === 'term' && $scope.addTermForm.$invalid) ||
               ($scope.addType === 'subject' && $scope.addSubjectForm.$invalid) ||
-              ($scope.addType === 'header' && $scope.addHeaderForm.$invalid);
+              ($scope.addType === 'header' && $scope.addHeaderForm.$invalid) ||
+              $scope.addInfoNameTaken;
           }
 
           // Cue the directive to show error if needed
           $scope.$broadcast('show-form-errors');
 
           // Do not close modal if form is invalid
+          // Used 'one' so invalid will change in closure
           $('#addSubjectInfoModal').one('hide.bs.modal', function(e) {
-            if(!angular.isDefined($scope.info) || invalid || $scope.addInfoNameTaken) {
+            if(invalid) {
               e.preventDefault();
               e.stopImmediatePropagation();
               return false;
             }
           });
+
+          // Send request to the server
+          if(!invalid) {
+            $scope.info.postUrl = $scope.currentPath;
+            Subject.postSubjectInfo($scope.info, function() {
+              // Clear form on success
+              $scope.addPopupClearClick();
+            }, function() {
+
+            });
+          }
         };
 
         /**********************************************************************

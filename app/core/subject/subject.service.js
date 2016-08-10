@@ -13,7 +13,8 @@ function($resource, Logger) {
       isArray: true
     },
     _postSubjectInfo: {
-      method: 'POST'
+      method: 'POST',
+      url: '/api/subjects/add'
     },
     _deleteSubjectInfo: {
       method: 'DELETE'
@@ -31,10 +32,10 @@ function($resource, Logger) {
     }
 
     return resource._getSubjects(function(data) {
-      Logger.debug('Retreived the subjects list successfully: ' + data);
+      Logger.debug('Retreived the subjects list successfully: ' + angular.toJson(data, true));
       succCallBack(data);
     }, function(err) {
-      Logger.error('Unable to retreive the subjects list: ' + err);
+      Logger.error('Unable to retreive the subjects list: ' + angular.toJson(err, true));
       errCallBack(err);
     });
   };
@@ -50,16 +51,16 @@ function($resource, Logger) {
     }
 
     return resource._getSubjectInfo({subject: url}, function(data) {
-      Logger.debug('Retreived the subject info of: ' + url + ' successfully: ' + data);
+      Logger.debug('Retreived the subject info of: ' + url + ' successfully: ' + angular.toJson(data, true));
       succCallBack(data);
     }, function(err) {
-      Logger.error('Unable to retreive the subject info of: ' + url + ' with error: ' + err);
+      Logger.error('Unable to retreive the subject info of: ' + url + ' with error: ' + angular.toJson(err, true));
       errCallBack(err);
     });
   };
 
-  resource.postSubjectInfo = function(url, data, succCallBack, errCallBack) {
-    Logger.debug('Trying to post subject info to url: ' + url + ' with data: ' + data);
+  resource.postSubjectInfo = function(data, succCallBack, errCallBack) {
+    Logger.debug('Trying to post subject with data: ' + angular.toJson(data, true));
 
     if(!angular.isFunction(succCallBack)) {
       Logger.error('resource.postSubjectInfo received succCallBack which isn\'t a function');
@@ -68,11 +69,11 @@ function($resource, Logger) {
       Logger.error('resource.postSubjectInfo received errCallBack which isn\'t a function');
     }
 
-    return resource._postSubjectInfo({subject: url, params: data}, function(data) {
-      Logger.debug('Posted the subject info of: ' + url + ' successfully: ' + data);
+    return resource._postSubjectInfo({params: data}, function() {
+      Logger.debug('Posted the subject successfully: ' + angular.toJson(data, true));
       succCallBack(data);
     }, function(err) {
-      Logger.error('Unable to post the subject info of: ' + url + ' with error: ' + err);
+      Logger.error('Unable to post the subject with error: ' + angular.toJson(err, true));
       errCallBack(err);
     });
   };
@@ -90,8 +91,8 @@ function($resource, Logger) {
     return resource._deleteSubjectInfo({subject: url}, function() {
       Logger.debug('Posted the subject info of: ' + url + ' successfully');
       succCallBack();
-    }, function() {
-      Logger.error('Unable to post the subject info of: ' + url);
+    }, function(err) {
+      Logger.error('Unable to post the subject info of: ' + url + ' with error: ' + angular.toJson(err, true));
       errCallBack();
     });
   };
