@@ -2,10 +2,10 @@
 
 angular.module('core.subject').factory('Subject', ['$resource', 'Logger',
 function($resource, Logger) {
-  var resource = $resource('/api/subjects/:subject', {}, {
-    _getSubjects: {
+  var resource = $resource('/api/:subject', {}, {
+    _getFields: {
       method: 'GET',
-      url: '/api/subjects',
+      url: '/api/fields',
       isArray: true
     },
     _getSubjectInfo: {
@@ -14,14 +14,13 @@ function($resource, Logger) {
     },
     _postSubjectInfo: {
       method: 'POST',
-      url: '/api/subjects/add'
     },
     _deleteSubjectInfo: {
       method: 'DELETE'
     }
   });
 
-  resource.getSubjects = function(succCallBack, errCallBack) {
+  resource.getFields = function(succCallBack, errCallBack) {
     Logger.debug('Trying to get subjects list');
 
     if(!angular.isFunction(succCallBack)) {
@@ -31,7 +30,7 @@ function($resource, Logger) {
       Logger.error('resource.getSubjects received errCallBack which isn\'t a function');
     }
 
-    return resource._getSubjects(function(data) {
+    return resource._getFields(function(data) {
       Logger.debug('Retreived the subjects list successfully: ' + angular.toJson(data, true));
       succCallBack(data);
     }, function(err) {
@@ -59,7 +58,7 @@ function($resource, Logger) {
     });
   };
 
-  resource.postSubjectInfo = function(data, succCallBack, errCallBack) {
+  resource.postSubjectInfo = function(url, data, succCallBack, errCallBack) {
     Logger.debug('Trying to post subject with data: ' + angular.toJson(data, true));
 
     if(!angular.isFunction(succCallBack)) {
@@ -69,7 +68,7 @@ function($resource, Logger) {
       Logger.error('resource.postSubjectInfo received errCallBack which isn\'t a function');
     }
 
-    return resource._postSubjectInfo({params: data}, function() {
+    return resource._postSubjectInfo({subject: url, params: data}, function() {
       Logger.debug('Posted the subject successfully: ' + angular.toJson(data, true));
       succCallBack(data);
     }, function(err) {
@@ -89,10 +88,10 @@ function($resource, Logger) {
     }
 
     return resource._deleteSubjectInfo({subject: url}, function() {
-      Logger.debug('Posted the subject info of: ' + url + ' successfully');
+      Logger.debug('Deleted the subject info of: ' + url + ' successfully');
       succCallBack();
     }, function(err) {
-      Logger.error('Unable to post the subject info of: ' + url + ' with error: ' + angular.toJson(err, true));
+      Logger.error('Unable to delete the subject info of: ' + url + ' with error: ' + angular.toJson(err, true));
       errCallBack();
     });
   };

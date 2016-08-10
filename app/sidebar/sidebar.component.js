@@ -123,8 +123,7 @@ angular.
 
           // Send request to the server
           if(!invalid) {
-            $scope.info.postUrl = $scope.currentPath;
-            Subject.postSubjectInfo($scope.info, function() {
+            Subject.postSubjectInfo($scope.currentPath, $scope.info, function() {
               // Clear form on success
               $scope.addPopupClearClick();
             }, function() {
