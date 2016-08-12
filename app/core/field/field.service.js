@@ -33,7 +33,14 @@ angular.module('core.field')
           fieldsList.push(field);
           $rootScope.$broadcast('fieldsChanged');
         }, function() {
-          $window.alert('Could not add the subject ' + data);
+          $window.alert('Could not add the field ' + data);
+        });
+      },
+      deleteField: function(data, succ, err) {
+        Server.deleteField(data, angular.isFunction(succ) ? succ : function() {
+
+        }, angular.isFunction(err) ? err : function() {
+          $window.alert('Could not delete the field ' + data);
         });
       }
     };

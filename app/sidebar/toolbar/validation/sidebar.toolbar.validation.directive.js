@@ -27,7 +27,7 @@ angular.module('sidebar')
         });
 
         scope.$on('show-form-errors', function() {
-          var invalid = !angular.isDefined(element) || formCtrl[inputName].$invalid || inputName === 'name' && scope.addInfoNameTaken;
+          var invalid = !angular.isDefined(element) || formCtrl[inputName].$invalid || inputName === 'name' && scope.addNameTaken;
           el.toggleClass('has-error', invalid);
           scope.showFormError[inputName] = invalid;
         });

@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('core.helper')
-.factory('Helper', [function() {
+angular.module('core.helper', ['core.log'])
+.factory('Helper', ['Logger', function(Logger) {
   return {
     parsePath: function(path) {
       if(!angular.isString(path)) {
@@ -24,6 +24,20 @@ angular.module('core.helper')
           else {
               ++i;
           }
+      }
+    },
+
+    removeSubstringAfterLastCharOccurrence: function(str) {
+      if(!angular.isString(str)) {
+        return;
+      }
+
+      var endIndex = str.lastIndexOf("/");
+      if(endIndex !== -1) {
+        return str.subsring(0, endIndex);
+      }
+      else {
+        return str;
       }
     }
   };

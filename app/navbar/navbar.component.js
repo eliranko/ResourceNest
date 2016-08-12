@@ -4,8 +4,8 @@ angular.
   module('navbar').
   component('navbar', {
     templateUrl: 'navbar/navbar.template.html',
-    controller: ['$scope', '$timeout', 'Logger',  'Server', 'Field',
-      function NavbarController($scope, $timeout, Logger,  Server, Field) {
+    controller: ['$scope', 'Field',
+      function NavbarController($scope, Field) {
 
         var getFields = function() {
           $scope.fields = Field.getFieldsList();

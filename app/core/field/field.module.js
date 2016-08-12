@@ -1,3 +1,3 @@
 'use strict';
 
-angular.module('core.field', ['ngResource', 'core.log']);
+angular.module('core.field', ['core.log', 'core.server']);
