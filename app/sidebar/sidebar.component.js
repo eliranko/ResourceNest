@@ -4,15 +4,17 @@ angular.
   module('sidebar').
   component('sidebar', {
     templateUrl: 'sidebar/sidebar.template.html',
-    controller: ['$rootScope', '$scope', '$window', '$location', '$interval', 'Logger', 'Subject', 'Helper',
-      function SidebarController($rootScope, $scope, $window, $location, $interval, Logger, Subject, Helper){
+    controller: ['$rootScope', '$scope', '$window', '$location', '$interval', 'Logger', 'Server', 'Helper', 'Field',
+      function SidebarController($rootScope, $scope, $window, $location, $interval, Logger, Server, Helper, Field){
         $scope.currentPath = '';
         $scope.subjectInfo = [];
         $scope.addType = 'term';
-        $scope.removePopupSubjectInfoList = [];
+        $scope.removeType = 'subjects';
+        $scope.removePopupList = [];
         $scope.toBeRemoved = [];
         $scope.removeButtonDisabled = false;
         $scope.addInfoNameTaken = false;
+        $scope.fieldsList = Field.getFieldsList();
 
         var setSubjectInfo = function(data) {
           if(data == null) {
@@ -49,7 +51,7 @@ angular.
             setSubjectInfo();
           }
           else {
-            Subject.getSubjectInfo($scope.currentPath, function(data) {
+            Server.getSubjectInfo($scope.currentPath, function(data) {
               switch (data.type) {
                 case 'header':
                   $scope.subjectInfo = data.data;
@@ -94,17 +96,29 @@ angular.
             // Check if the name is taken
             $scope.addInfoNameTaken = false;
             if(angular.isDefined($scope.info.name)) {
-              $scope.subjectInfo.forEach(function(subjectInfo) {
-                if($scope.info.name.toLowerCase() === subjectInfo.name.toLowerCase()) {
-                  $scope.addInfoNameTaken = true;
-                }
-              });
+              if($scope.addType !== 'field') {
+                $scope.subjectInfo.forEach(function(subjectInfo) {
+                  if($scope.info.name.toLowerCase() === subjectInfo.name.toLowerCase()) {
+                    $scope.addInfoNameTaken = true;
+                  }
+                });
+              }
+              else if($scope.addType === 'field') {
+                var fields = Field.getFieldsList();
+                fields.forEach(function(field) {
+                  if($scope.info.name.toLowerCase() === field.name.toLowerCase()) {
+                    $scope.addInfoNameTaken = true;
+                  }
+                });
+              }
             }
 
             // Check if all the fields were filled correctly
-            invalid = ($scope.addType === 'term' && $scope.addTermForm.$invalid) ||
+            invalid = ((($scope.addType === 'term' && $scope.addTermForm.$invalid) ||
               ($scope.addType === 'subject' && $scope.addSubjectForm.$invalid) ||
               ($scope.addType === 'header' && $scope.addHeaderForm.$invalid) ||
+              ($scope.addType === 'field' && $scope.addFieldForm.$invalid)) &&
+              angular.isDefined($scope.info.name)) ||
               $scope.addInfoNameTaken;
           }
 
@@ -122,19 +136,26 @@ angular.
           });
 
           // Send request to the server
-          if(!invalid) {
-            Subject.postSubjectInfo($scope.currentPath, $scope.info, function() {
+          if(!invalid && $scope.addType !== 'term') {
+            Server.postSubjectInfo($scope.currentPath, $scope.info, function() {
               // Clear form on success
               $scope.addPopupClearClick();
-            }, function() {
-
             });
+          }
+          else if(!invalid && $scope.addType === 'term') {
+            Field.addField($scope.info.name);
           }
         };
 
         /**********************************************************************
          **************************Remove Subject Info*************************
          *********************************************************************/
+
+        $scope.removePopupHeaderClick = function(type)  {
+          $scope.removeType = type;
+          $scope.removePopupClearClicked();
+        };
+
         $window.removePopupDragStarted = function(e) {
           e.target.style.opacity = '0.4';
 
@@ -151,7 +172,7 @@ angular.
         $window.removePopupOnDrop = function (e) {
           var data = e.dataTransfer.getData('text');
           if($scope.toBeRemoved.indexOf(data) === -1) {
-            Helper.removeIf($scope.removePopupSubjectInfoList, data, function(info, name) {
+            Helper.removeIf($scope.removePopupList, data, function(info, name) {
               return info.name === name;
             });
             $scope.toBeRemoved.push(data);
@@ -165,7 +186,9 @@ angular.
         };
 
        $scope.removePopupClearClicked = function() {
-         angular.copy($scope.subjectInfo, $scope.removePopupSubjectInfoList);
+         angular.copy($scope.removeType === 'subjects' ?
+         $scope.subjectInfo : $scope.fieldsList, $scope.removePopupList);
+
          $scope.toBeRemoved = [];
        };
 
@@ -174,7 +197,7 @@ angular.
          var finishedDeletionCount = 0;
          var deletedList = [];
          $scope.toBeRemoved.forEach(function(name) {
-           Subject.deleteSubjectInfo($scope.currentPath + '/' + name, function() {
+           Server.deleteSubjectInfo($scope.currentPath + '/' + name, function() {
              finishedDeletionCount++;
              deletedList.push(name);
            }, function() {
@@ -203,7 +226,7 @@ angular.
          Helper.removeIf($scope.subjectInfo, deletedList, function(info, list) {
            return list.indexOf(info.name) !== -1;
          });
-         angular.copy($scope.subjectInfo, $scope.removePopupSubjectInfoList);
+         angular.copy($scope.subjectInfo, $scope.removePopupList);
 
          $scope.removeButtonDisabled = false;
        };

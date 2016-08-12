@@ -21,7 +21,7 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Fields <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li ng-repeat="field in fields">
-              <a href="#">{{field}}</a>
+              <a ng-href="{{field.href}}">{{field.name}}</a>
             </li>
           </ul>
         </li>

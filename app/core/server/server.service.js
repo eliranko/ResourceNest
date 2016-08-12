@@ -1,12 +1,16 @@
 'use strict';
 
-angular.module('core.subject').factory('Subject', ['$resource', 'Logger',
+angular.module('core.server').factory('Server', ['$resource', 'Logger',
 function($resource, Logger) {
   var resource = $resource('/api/:subject', {}, {
     _getFields: {
       method: 'GET',
       url: '/api/fields',
       isArray: true
+    },
+    _postField: {
+      method: 'POST',
+      url: '/api/fields'
     },
     _getSubjectInfo: {
       method: 'GET',
@@ -21,21 +25,46 @@ function($resource, Logger) {
   });
 
   resource.getFields = function(succCallBack, errCallBack) {
-    Logger.debug('Trying to get subjects list');
+    Logger.debug('Trying to get fields list');
 
     if(!angular.isFunction(succCallBack)) {
       Logger.error('resource.getSubjects received succCallBack which isn\'t a function');
     }
-    if(!angular.isFunction(errCallBack)) {
+    if(angular.isDefined(errCallBack) && !angular.isFunction(errCallBack)) {
       Logger.error('resource.getSubjects received errCallBack which isn\'t a function');
     }
 
     return resource._getFields(function(data) {
-      Logger.debug('Retreived the subjects list successfully: ' + angular.toJson(data, true));
+      Logger.debug('Retreived the fields list successfully: ' + angular.toJson(data, true));
       succCallBack(data);
     }, function(err) {
-      Logger.error('Unable to retreive the subjects list: ' + angular.toJson(err, true));
-      errCallBack(err);
+      Logger.error('Unable to retreive the fields list: ' + angular.toJson(err, true));
+
+      if(angular.isDefined(errCallBack)) {
+        errCallBack(err);
+      }
+    });
+  };
+
+  resource.postField = function(data, succCallBack, errCallBack) {
+    Logger.debug('Trying to post field with data: ' + angular.toJson(data, true));
+
+    if(!angular.isFunction(succCallBack)) {
+      Logger.error('resource.postField received succCallBack which isn\'t a function');
+    }
+    if(angular.isDefined(errCallBack) && !angular.isFunction(errCallBack)) {
+      Logger.error('resource.postField received errCallBack which isn\'t a function');
+    }
+
+    return resource._postField({params: data}, function() {
+      Logger.debug('Posted the field successfully: ' + angular.toJson(data, true));
+      succCallBack(data);
+    }, function(err) {
+      Logger.error('Unable to post the field with error: ' + angular.toJson(err, true));
+
+      if(angular.isDefined(errCallBack)) {
+        errCallBack(err);
+      }
     });
   };
 
@@ -45,7 +74,7 @@ function($resource, Logger) {
     if(!angular.isFunction(succCallBack)) {
       Logger.error('resource.getSubjectInfo received succCallBack which isn\'t a function');
     }
-    if(!angular.isFunction(errCallBack)) {
+    if(angular.isDefined(errCallBack) && !angular.isFunction(errCallBack)) {
       Logger.error('resource.getSubjectInfo received errCallBack which isn\'t a function');
     }
 
@@ -54,7 +83,10 @@ function($resource, Logger) {
       succCallBack(data);
     }, function(err) {
       Logger.error('Unable to retreive the subject info of: ' + url + ' with error: ' + angular.toJson(err, true));
-      errCallBack(err);
+
+      if(angular.isDefined(errCallBack)) {
+        errCallBack(err);
+      }
     });
   };
 
@@ -64,7 +96,7 @@ function($resource, Logger) {
     if(!angular.isFunction(succCallBack)) {
       Logger.error('resource.postSubjectInfo received succCallBack which isn\'t a function');
     }
-    if(!angular.isFunction(errCallBack)) {
+    if(angular.isDefined(errCallBack) && !angular.isFunction(errCallBack)) {
       Logger.error('resource.postSubjectInfo received errCallBack which isn\'t a function');
     }
 
@@ -73,7 +105,10 @@ function($resource, Logger) {
       succCallBack(data);
     }, function(err) {
       Logger.error('Unable to post the subject with error: ' + angular.toJson(err, true));
-      errCallBack(err);
+
+      if(angular.isDefined(errCallBack)) {
+        errCallBack(err);
+      }
     });
   };
 
@@ -83,7 +118,7 @@ function($resource, Logger) {
     if(!angular.isFunction(succCallBack)) {
       Logger.error('resource.deleteSubjectInfo received succCallBack which isn\'t a function');
     }
-    if(!angular.isFunction(errCallBack)) {
+    if(angular.isDefined(errCallBack) && !angular.isFunction(errCallBack)) {
       Logger.error('resource.deleteSubjectInfo received errCallBack which isn\'t a function');
     }
 
@@ -92,7 +127,10 @@ function($resource, Logger) {
       succCallBack();
     }, function(err) {
       Logger.error('Unable to delete the subject info of: ' + url + ' with error: ' + angular.toJson(err, true));
-      errCallBack();
+
+      if(angular.isDefined(errCallBack)) {
+        errCallBack(err);
+      }
     });
   };
 

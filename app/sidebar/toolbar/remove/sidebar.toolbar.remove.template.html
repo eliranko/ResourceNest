@@ -1,15 +1,27 @@
 <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="removeSubjectInfoModalLabel" id="removeSubjectInfoModal">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="btn btn-secondary" ng-click="removePopupHeaderClick('subjects')">Subjects</button>
+        <button type="button" class="btn btn-secondary" ng-click="removePopupHeaderClick('fields')">Fields</button>
+      </div>
       <div class="modal-body">
         <div class="contianer">
           <div class="row">
             <div class="col-sm-4">
               <ul class="nav nav-sidebar nav-sidebar-remove-popup">
-                <li ng-repeat="info in removePopupSubjectInfoList">
+                <li ng-show="removeType === 'subjects'" ng-repeat="info in removePopupSubjectInfoList">
                   <a draggable="true" ondragstart="removePopupDragStarted(event)" ondragend="removePopupDragEnd(event)">
                     <span class="sidebar-image" ng-class="{'sidebar-image-term': info.type === 'term', 'sidebar-image-subject': info.type === 'subject', 'sidebar-image-header': info.type === 'header'}">
                       {{info.name}}
+                    </span>
+                  </a>
+                </li>
+                <li ng-show="removeType === 'fields'" ng-repeat="field in fieldsList">
+                  <a draggable="true" ondragstart="removePopupDragStarted(event)" ondragend="removePopupDragEnd(event)">
+                    <span class="sidebar-image" ng-class="{'sidebar-image-term': info.type === 'term', 'sidebar-image-subject': info.type === 'subject', 'sidebar-image-header': info.type === 'header'}">
+                      {{field.name}}
                     </span>
                   </a>
                 </li>

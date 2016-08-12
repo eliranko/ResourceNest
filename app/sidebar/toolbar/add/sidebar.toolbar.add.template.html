@@ -6,6 +6,7 @@
         <button type="button" class="btn btn-secondary" ng-click="addPopupHeaderClick('term')">Term</button>
         <button type="button" class="btn btn-secondary" ng-click="addPopupHeaderClick('subject')">Subject</button>
         <button type="button" class="btn btn-secondary" ng-click="addPopupHeaderClick('header')">Header</button>
+        <button type="button" class="btn btn-secondary" ng-click="addPopupHeaderClick('field')">Field</button>
       </div>
       <div class="modal-body">
         <div ng-show="addType === 'term'">
@@ -59,6 +60,20 @@
                 <label for="HeaderName" class="col-sm-2 col-form-label col-form-label-sm">Name</label>
                 <div class="col-sm-10">
                   <input class="form-control form-control-sm" id="headerName" name="name" placeholder="Name" ng-model="info.name" required />
+                  <show-error-message content="'Name is taken'" ng-show="showFormError['name'] && addInfoNameTaken"></show-error-message>
+                  <show-error-message content="'Please fill the field'" ng-show="showFormError['name'] && !addInfoNameTaken && addTermForm.name.$invalid"></show-error-message>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div ng-show="addType == 'field'">
+          <div class="contianer">
+            <form name="addFieldForm">
+              <div class="form-group row" sidebar-toolbar-validation>
+                <label for="FieldName" class="col-sm-2 col-form-label col-form-label-sm">Name</label>
+                <div class="col-sm-10">
+                  <input class="form-control form-control-sm" id="fieldName" name="name" placeholder="Name" ng-model="info.name" required />
                   <show-error-message content="'Name is taken'" ng-show="showFormError['name'] && addInfoNameTaken"></show-error-message>
                   <show-error-message content="'Please fill the field'" ng-show="showFormError['name'] && !addInfoNameTaken && addTermForm.name.$invalid"></show-error-message>
                 </div>
