@@ -82,7 +82,7 @@ function($resource, Logger) {
       Logger.error('resource.deleteField received errCallBack which isn\'t a function');
     }
 
-    return resource._deleteSubjectInfo({params: data}, function() {
+    return resource._deleteField({params: data}, function() {
       Logger.debug('Deleted the field: ' + angular.toJson(data) + ' successfully');
       succCallBack(data);
     }, function(err) {
@@ -104,7 +104,7 @@ function($resource, Logger) {
       Logger.error('resource.getSubfields received errCallBack which isn\'t a function');
     }
 
-    return resource._getSubjectInfo({subject: url}, function(data) {
+    return resource._getSubfields({subject: url}, function(data) {
       Logger.debug('Retreived the subfields of: ' + url + ' successfully: ' + angular.toJson(data, true));
       succCallBack(data);
     }, function(err) {

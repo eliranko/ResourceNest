@@ -6,46 +6,33 @@ angular.module('sidebar')
     return {
       templateUrl: 'sidebar/toolbar/remove/sidebar.toolbar.remove.template.html',
       link: function(scope, el, attrs, formCtrl) {
-        $('#removeSubjectInfoModal').on('shown.bs.modal', function(e) {
-          scope.toBeRemoved = [];
 
-          if(scope.removeType === 'subjects') {
-            angular.copy(scope.subjectInfo, scope.removePopupList);
-          }
-          else {
-            angular.copy(scope.fieldsList, scope.removePopupList);
+        var clearRemoveModal = function(ignoreRemoveType) {
+          if(ignoreRemoveType === false) {
+            scope.removeType = 'subfields';
           }
 
-          scope.$digest();
-        });
-
-        scope.toolbarRemoveClick = function() {
            scope.toBeRemoved = [];
+           scope.removeButtonDisabled = true;
 
-           if(scope.addType === 'subjects') {
-             angular.copy(scope.subjectInfo, scope.removePopupList);
+           if(scope.removeType === 'subfields') {
+             angular.copy(scope.subfieldsList, scope.removePopupList);
            }
            else {
              angular.copy(scope.fieldsList, scope.removePopupList);
            }
          };
 
-         $('#removeSubjectInfoModal').on('shown.bs.modal', function(e) {
-           scope.toBeRemoved = [];
+         clearRemoveModal();
 
-           if(scope.addType === 'subjects') {
-             angular.copy(scope.subjectInfo, scope.removePopupList);
-           }
-           else {
-             angular.copy(scope.fieldsList, scope.removePopupList);
-           }
-
+         $('#removeModal').on('hidden.bs.modal', function(e) {
+           clearRemoveModal();
            scope.$digest();
          });
 
         scope.removePopupHeaderClick = function(type)  {
           scope.removeType = type;
-          scope.removePopupClearClicked();
+          clearRemoveModal(true);
         };
 
         $window.removePopupDragStarted = function(e) {
@@ -68,6 +55,7 @@ angular.module('sidebar')
               return info.name === name;
             });
             scope.toBeRemoved.push(data);
+            scope.removeButtonDisabled = false;
             scope.$digest();
           }
         };
@@ -78,10 +66,7 @@ angular.module('sidebar')
         };
 
        scope.removePopupClearClicked = function() {
-         angular.copy(scope.removeType === 'subjects' ?
-         scope.subjectInfo : scope.fieldsList, scope.removePopupList);
-
-         scope.toBeRemoved = [];
+         clearRemoveModal(true);
        };
 
        scope.removePopupRemoveClicked = function() {
@@ -90,7 +75,7 @@ angular.module('sidebar')
          var deletedList = [];
 
          scope.toBeRemoved.forEach(function(name) {
-           if(scope.removeType === 'subjects') {
+           if(scope.removeType === 'subfields') {
              Subfield.deleteSubfield(name, function() {
                finishedDeletionCount++;
                deletedList.push(name);
@@ -112,26 +97,35 @@ angular.module('sidebar')
          // TODO: find a better way
          var promise = $interval(function() {
            if(finishedDeletionCount === scope.toBeRemoved.length) {
+             // Notify client about the unsuccessful deletions
+             var diffArr = scope.toBeRemoved.filter(function(item) {
+               return deletedList.indexOf(item) === -1;
+             });
+             if(diffArr.length > 0) {
+               $window.alert('Could not delete ' + diffArr.join(','));
+             }
+
+             // Clear lists from unrelevant items
+             scope.toBeRemoved = [];
+             Helper.removeIf(scope.removeType === 'subfields' ? scope.subfieldsList : scope.fieldsList, deletedList, function(info, list) {
+               return list.indexOf(info.name) !== -1;
+             });
+             angular.copy(scope.removeType === 'subfields' ? scope.subfieldsList : scope.fieldsList, scope.removePopupList);
+
+             scope.removeButtonDisabled = false;
+             $('#removeModal').modal('hide');
              $interval.cancel(promise);
            }
+           else {
+             // Do not close modal
+             // Used 'one' so it will not close on the current occasion
+             $('#removeModal').one('hide.bs.modal', function(e) {
+               e.preventDefault();
+               e.stopImmediatePropagation();
+               return false;
+             });
+           }
          }, 500, 0);
-
-         // Notify client about the unsuccessful deletions
-         var diffArr = scope.toBeRemoved.filter(function(item) {
-           return deletedList.indexOf(item) === -1;
-         });
-         if(diffArr.length > 0) {
-           $window.alert('Could not delete ' + diffArr.join(','));
-         }
-
-         // Clear lists from unrelevant items
-         scope.toBeRemoved = [];
-         Helper.removeIf(scope.subjectInfo, deletedList, function(info, list) {
-           return list.indexOf(info.name) !== -1;
-         });
-         angular.copy(scope.subjectInfo, scope.removePopupList);
-
-         scope.removeButtonDisabled = false;
        };
       }
     };

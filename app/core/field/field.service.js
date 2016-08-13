@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('core.field')
-  .service('Field', ['$rootScope', '$window', 'Logger', 'Server',
+  .factory('Field', ['$rootScope', '$window', 'Logger', 'Server',
   function($rootScope, $window, Logger, Server) {
     var fieldsList = [
       {
@@ -40,7 +40,7 @@ angular.module('core.field')
         Server.deleteField(data, angular.isFunction(succ) ? succ : function() {
 
         }, angular.isFunction(err) ? err : function() {
-          $window.alert('Could not delete the field ' + data);
+          $window.alert('Could not delete the field ' + angular.toJson(data));
         });
       }
     };

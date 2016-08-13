@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('core.subfield')
-  .service('Subfield', ['$rootScope', '$scope', '$locaiton', '$window', 'Logger', 'Server', 'Helper',
-  function($rootScope, $scope, $location, $window, Logger, Server, Helper) {
+  .factory('Subfield', ['$rootScope', '$location', '$window', 'Logger', 'Server', 'Helper',
+  function($rootScope, $location, $window, Logger, Server, Helper) {
     var subfieldsList = [
       {
         type: 'term',
@@ -44,7 +44,7 @@ angular.module('core.subfield')
 
     getSubfields($location.path());
 
-    $scope.$on('$locationChangeStart', function (event) {
+    $rootScope.$on('$locationChangeStart', function (event) {
       getSubfields($location.path());
     });
 

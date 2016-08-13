@@ -2,7 +2,7 @@
 <div class="col-sm-3 col-md-2 sidebar">
   <!--Terms-->
   <ul class="nav nav-sidebar">
-    <li ng-repeat="info in subjectInfo | filter : {type: 'term'}">
+    <li ng-repeat="info in subfieldsList | filter : {type: 'term'}">
       <a ng-href="{{info.href}}">
         <span class="sidebar-image sidebar-image-term">
           {{info.name}}
@@ -13,7 +13,7 @@
 
   <!--Subjects-->
   <ul class="nav nav-sidebar">
-    <li ng-repeat="info in subjectInfo | filter : {type: 'subject'}">
+    <li ng-repeat="info in subfieldsList | filter : {type: 'subject'}">
       <a ng-href="{{info.href}}">
         <span class="sidebar-image sidebar-image-subject">
           {{info.name}}
@@ -24,7 +24,7 @@
 
   <!--Headers-->
   <ul class="nav nav-sidebar">
-    <li ng-repeat="info in subjectInfo | filter : {type: 'header'}">
+    <li ng-repeat="info in subfieldsList | filter : {type: 'header'}">
       <a ng-href="{{info.href}}">
         <span class="sidebar-image sidebar-image-header">
           {{info.name}}

@@ -6,16 +6,21 @@ angular.module('sidebar')
     return {
       templateUrl: 'sidebar/toolbar/add/sidebar.toolbar.add.template.html',
       link: function(scope, el, attrs, formCtrl) {
+
         scope.addPopupClearClick = function() {
-          scope.addInfoNameTaken = false;
-          if(angular.isDefined(scope.info)) {
-            scope.info.name = "";
-            scope.info.content = "";
-            scope.info.url = "";
-          }
+          scope.addNameTaken = false;
+          // Reset form's fields
+          $.each(scope.info, function(key) {
+            scope.info[key] = "";
+          });
 
           scope.$broadcast('show-form-errors-reset');
         };
+
+        $('#addModal').on('hidden.bs.modal', function(e) {
+          scope.addPopupClearClick();
+          scope.$digest();
+        });
 
         scope.addPopupHeaderClick = function(type) {
           scope.addType = type;
@@ -28,32 +33,30 @@ angular.module('sidebar')
             scope.info.type = scope.addType;
 
             // Check if the name is taken
-            scope.addInfoNameTaken = false;
+            scope.addNameTaken = false;
             if(angular.isDefined(scope.info.name)) {
               if(scope.addType !== 'field') {
-                scope.subjectInfo.forEach(function(subjectInfo) {
-                  if(scope.info.name.toLowerCase() === subjectInfo.name.toLowerCase()) {
-                    scope.addInfoNameTaken = true;
+                scope.subfieldsList.forEach(function(subfield) {
+                  if(scope.info.name.toLowerCase() === subfield.name.toLowerCase()) {
+                    scope.addNameTaken = true;
                   }
                 });
               }
               else if(scope.addType === 'field') {
-                var fields = Field.getFieldsList();
-                fields.forEach(function(field) {
+                scope.fieldsList.forEach(function(field) {
                   if(scope.info.name.toLowerCase() === field.name.toLowerCase()) {
-                    scope.addInfoNameTaken = true;
+                    scope.addNameTaken = true;
                   }
                 });
               }
             }
 
             // Check if all the fields were filled correctly
-            invalid = (((scope.addType === 'term' && scope.addTermForm.$invalid) ||
+            invalid = (scope.addType === 'term' && scope.addTermForm.$invalid) ||
               (scope.addType === 'subject' && scope.addSubjectForm.$invalid) ||
               (scope.addType === 'header' && scope.addHeaderForm.$invalid) ||
-              (scope.addType === 'field' && scope.addFieldForm.$invalid)) &&
-              angular.isDefined(scope.info.name)) ||
-              scope.addInfoNameTaken;
+              (scope.addType === 'field' && scope.addFieldForm.$invalid) ||
+              scope.addNameTaken;
           }
 
           // Cue the directive to show error if needed
@@ -61,7 +64,7 @@ angular.module('sidebar')
 
           // Do not close modal if form is invalid
           // Used 'one' so invalid will change in closure
-          $('#addSubjectInfoModal').one('hide.bs.modal', function(e) {
+          $('#addModal').one('hide.bs.modal', function(e) {
             if(invalid) {
               e.preventDefault();
               e.stopImmediatePropagation();
@@ -72,12 +75,12 @@ angular.module('sidebar')
           // Send request to the server
           if(!invalid && scope.addType !== 'term') {
             Subfield.addSubfield(scope.info);
+            scope.addPopupClearClick();
           }
           else if(!invalid && scope.addType === 'term') {
             Field.addField(scope.info.name);
+            scope.addPopupClearClick();
           }
-
-          scope.addPopupClearClick();
         };
       }
     };
